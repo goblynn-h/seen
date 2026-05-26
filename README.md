@@ -22,16 +22,23 @@
 | 拖拽 | @dnd-kit |
 | 后端 | Rust |
 
-## 构建
+## 直接使用
+
+从 [Releases](https://github.com/goblynn-h/echo/releases) 下载 `echo.exe`（约 9 MB），双击运行，无需安装。
+
+## 从源码构建
+
+需要以下环境：
+
+- **Node.js 18+** — `winget install OpenJS.NodeJS`
+- **Rust** — 安装 [rustup](https://rustup.rs)
+- **Visual Studio Build Tools** — 勾选「使用 C++ 的桌面开发」工作负载
+- **WebView2** — Windows 10/11 自带
 
 ```bash
-# 安装依赖
+git clone https://github.com/goblynn-h/echo.git
+cd echo
 npm install
-
-# 开发模式
-npm run tauri dev
-
-# 构建便携版 exe
 npm run tauri build
 ```
 
