@@ -23,7 +23,7 @@ export default function SetupPage({ onComplete }: { onComplete: (rootPath: strin
   return (
     <div className="h-screen w-screen flex items-center justify-center bg-app-bg">
       <div className="bg-app-surface rounded-xl shadow-lg p-8 w-96 max-w-[90vw] transition-colors">
-        <h1 className="text-xl font-bold text-app-text mb-1">欢迎使用回响</h1>
+        <h1 className="text-xl font-bold text-app-text mb-1">欢迎使用看过</h1>
         <p className="text-sm text-app-text-secondary mb-6">请选择一个文件夹来存储你的媒体库数据。所有数据将保存在该文件夹中，方便备份和迁移。</p>
         <div className="flex gap-2 mb-4">
           <input type="text" value={selectedPath} readOnly placeholder="点击右侧按钮选择文件夹..." className="flex-1 px-3 py-2 text-sm border border-app-border rounded-lg bg-app-input text-app-text-secondary focus:outline-none" />

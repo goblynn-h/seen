@@ -4,9 +4,9 @@ import { GripVertical, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import type { Entry } from '../types';
 
-interface CoverCardProps { entry: Entry; coverUrl: string; onClick: () => void; onDelete: () => void; isDragging?: boolean; }
+interface CoverCardProps { entry: Entry; coverUrl: string; onClick: () => void; onDelete: () => void; isDragging?: boolean; hasNote?: boolean; }
 
-export default function CoverCard({ entry, coverUrl, onClick, onDelete, isDragging }: CoverCardProps) {
+export default function CoverCard({ entry, coverUrl, onClick, onDelete, isDragging, hasNote }: CoverCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [imgError, setImgError] = useState(false);
   const { attributes, listeners, setNodeRef, transform, transition, isDragging: isSortableDragging } = useSortable({ id: entry.id });
@@ -41,6 +41,7 @@ export default function CoverCard({ entry, coverUrl, onClick, onDelete, isDraggi
         <p className="text-sm font-medium text-app-text truncate">{entry.title}</p>
         <p className="text-xs text-app-text-muted mt-0.5 truncate">{entry.date}</p>
       </div>
+      {hasNote && <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-12 h-1 bg-amber-400 rounded-full" title="已记录笔记" />}
     </div>
   );
 }

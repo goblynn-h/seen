@@ -1,8 +1,8 @@
 {
   "$schema": "../node_modules/@tauri-apps/cli/config.schema.json",
-  "productName": "回响",
+  "productName": "看过",
   "version": "0.1.0",
-  "identifier": "com.echo.app",
+  "identifier": "com.seen.app",
   "build": {
     "frontendDist": "../dist",
     "devUrl": "http://localhost:1420",
@@ -12,7 +12,7 @@
   "app": {
     "windows": [
       {
-        "title": "回响",
+        "title": "看过",
         "width": 900,
         "height": 600,
         "minWidth": 900,

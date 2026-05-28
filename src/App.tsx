@@ -5,6 +5,7 @@ import { getCurrentWindow } from '@tauri-apps/api/window';
 import { open } from '@tauri-apps/plugin-dialog';
 import { Settings, Moon, Sun, FolderOpen, Palette } from 'lucide-react';
 import type { CategoryInfo, Entry } from './types';
+import { sanitizeFileName } from './utils';
 import { useTheme, THEMES } from './hooks/useTheme';
 import CategoryTabs from './components/CategoryTabs';
 import SearchBar from './components/SearchBar';
@@ -12,10 +13,6 @@ import CoverGrid from './components/CoverGrid';
 import DetailModal from './components/DetailModal';
 import SetupPage from './components/SetupPage';
 import AddEntryModal from './components/AddEntryModal';
-
-function sanitizeFileName(title: string): string {
-  return title.replace(/[/\\?%*:|"<>]/g, '').replace(/\s+/g, '_').slice(0, 40);
-}
 
 export default function App() {
   const [rootPath, setRootPath] = useState('');
@@ -87,7 +84,19 @@ export default function App() {
   async function loadEntries() {
     try {
       const data = await invoke<string>('load_entries', { category: currentCategory, rootPath });
-      setEntries(JSON.parse(data || '[]'));
+      const entries: Entry[] = JSON.parse(data || '[]');
+      const noteFiles = entries.filter((e) => !e.hasNote).map((e) => e.noteFileName);
+      if (noteFiles.length > 0) {
+        try {
+          const filledJson = await invoke<string>('check_notes', { category: currentCategory, rootPath, fileNames: noteFiles });
+          const filled: string[] = JSON.parse(filledJson || '[]');
+          const filledSet = new Set(filled);
+          for (const e of entries) {
+            if (!e.hasNote && filledSet.has(e.noteFileName)) e.hasNote = true;
+          }
+        } catch (_) { /* ignore, entries display fine without hasNote */ }
+      }
+      setEntries(entries);
     } catch (e) { console.error(e); setEntries([]); }
   }
 
@@ -150,8 +159,8 @@ export default function App() {
       coverFileName = await invoke<string>('copy_cover', { sourcePath: newEntry.sourcePath, category: currentCategory, rootPath, targetName: safeName }).catch(() => '');
     }
     const noteFileName = `${safeName}.md`;
-    const entry: Entry = { id, title: newEntry.title, date: newEntry.date, coverFileName, noteFileName, createdAt: new Date().toISOString() };
-    const newEntries = [...entries, entry];
+    const entry: Entry = { id, title: newEntry.title, date: newEntry.date, coverFileName, noteFileName, createdAt: new Date().toISOString(), hasNote: false };
+    const newEntries = [entry, ...entries];
     setEntries(newEntries);
     await saveEntriesWrapper(newEntries);
     await invoke('save_note', { category: currentCategory, rootPath, fileName: noteFileName, content: '' }).catch(console.error);

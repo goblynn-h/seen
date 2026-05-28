@@ -193,6 +193,47 @@ fn delete_note(category: String, root_path: String, file_name: String) -> Result
 }
 
 #[tauri::command]
+fn check_notes(category: String, root_path: String, file_names: Vec<String>) -> Result<String, String> {
+    let notes_dir = PathBuf::from(&root_path).join(&category).join("notes");
+    let mut result = Vec::new();
+    for name in file_names {
+        let path = notes_dir.join(&name);
+        if let Ok(content) = fs::read_to_string(&path) {
+            if !content.trim().is_empty() {
+                result.push(name);
+            }
+        }
+    }
+    serde_json::to_string(&result).map_err(|e| e.to_string())
+}
+
+#[tauri::command]
+fn rename_cover(category: String, root_path: String, old_name: String, new_name: String) -> Result<String, String> {
+    if old_name.is_empty() || old_name == new_name {
+        return Ok(new_name);
+    }
+    let old_path = PathBuf::from(&root_path).join(&category).join("covers").join(&old_name);
+    let new_path = PathBuf::from(&root_path).join(&category).join("covers").join(&new_name);
+    if old_path.exists() && !new_path.exists() {
+        fs::rename(&old_path, &new_path).map_err(|e| e.to_string())?;
+    }
+    Ok(new_name)
+}
+
+#[tauri::command]
+fn rename_note(category: String, root_path: String, old_name: String, new_name: String) -> Result<String, String> {
+    if old_name.is_empty() || old_name == new_name {
+        return Ok(new_name);
+    }
+    let old_path = PathBuf::from(&root_path).join(&category).join("notes").join(&old_name);
+    let new_path = PathBuf::from(&root_path).join(&category).join("notes").join(&new_name);
+    if old_path.exists() && !new_path.exists() {
+        fs::rename(&old_path, &new_path).map_err(|e| e.to_string())?;
+    }
+    Ok(new_name)
+}
+
+#[tauri::command]
 fn load_config() -> Result<String, String> {
     let exe_dir = std::env::current_exe()
         .map_err(|e| e.to_string())?
@@ -241,11 +282,14 @@ pub fn run() {
             delete_category,
             load_entries,
             save_entries,
+            check_notes,
             copy_cover,
             delete_cover,
+            rename_cover,
             save_note,
             load_note,
             delete_note,
+            rename_note,
             load_config,
             save_config,
         ])

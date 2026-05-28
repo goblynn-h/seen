@@ -10,6 +10,7 @@ export interface Entry {
   coverFileName: string;
   noteFileName: string;
   createdAt: string;
+  hasNote?: boolean;
 }
 
 export interface AppConfig {

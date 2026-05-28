@@ -30,10 +30,10 @@ export default function CoverGrid({ entries, getCoverUrl, onEntryClick, onDelete
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
       <SortableContext items={entries.map((e) => e.id)} strategy={rectSortingStrategy}>
         <div className="flex flex-wrap gap-4 p-4 content-start">
-          {entries.map((entry) => (
-            <CoverCard key={entry.id} entry={entry} coverUrl={getCoverUrl(entry.id, entry.coverFileName)} onClick={() => onEntryClick(entry)} onDelete={() => onDelete(entry)} />
-          ))}
           <AddCoverButton onClick={onAdd} />
+          {entries.map((entry) => (
+            <CoverCard key={entry.id} entry={entry} coverUrl={getCoverUrl(entry.id, entry.coverFileName)} onClick={() => onEntryClick(entry)} onDelete={() => onDelete(entry)} hasNote={entry.hasNote} />
+          ))}
         </div>
       </SortableContext>
     </DndContext>

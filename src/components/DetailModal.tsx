@@ -3,6 +3,7 @@ import MDEditor from '@uiw/react-md-editor';
 import { X, Eye, Edit3, ImageUp } from 'lucide-react';
 import { open } from '@tauri-apps/plugin-dialog';
 import type { Entry } from '../types';
+import { sanitizeFileName } from '../utils';
 import { useDebounce } from '../hooks/useDebounce';
 import { invoke, convertFileSrc } from '@tauri-apps/api/core';
 
@@ -31,7 +32,14 @@ export default function DetailModal({ entry, category, rootPath, coverUrl, onClo
 
   useEffect(() => {
     invoke<string>('load_note', { category, rootPath, fileName: entry.noteFileName })
-      .then((content) => { setNoteContent(content); setSavedNoteContent(content); setPreviewMode(content ? 'preview' : 'edit'); })
+      .then((content) => {
+        setNoteContent(content);
+        setSavedNoteContent(content);
+        setPreviewMode(content ? 'preview' : 'edit');
+        if (content && !entry.hasNote) {
+          onUpdate({ ...entry, hasNote: true });
+        }
+      })
       .catch(console.error).finally(() => setLoading(false));
   }, [entry.id, entry.noteFileName, category, rootPath]);
 
@@ -52,6 +60,28 @@ export default function DetailModal({ entry, category, rootPath, coverUrl, onClo
     if (noteContent !== savedNoteContent) {
       try { await invoke('save_note', { category, rootPath, fileName: entry.noteFileName, content: noteContent }); } catch (e) { console.error(e); }
     }
+
+    const newSafeName = sanitizeFileName(title);
+    const newNoteFileName = `${newSafeName}.md`;
+    const hasNote = noteContent.trim().length > 0;
+
+    if (newNoteFileName !== entry.noteFileName || hasNote !== (entry.hasNote ?? false)) {
+      try {
+        let updated = { ...entry, hasNote };
+        if (newNoteFileName !== entry.noteFileName) {
+          updated.noteFileName = newNoteFileName;
+          if (entry.coverFileName) {
+            const ext = entry.coverFileName.split('.').pop() || 'jpg';
+            const newCoverFileName = `${newSafeName}.${ext}`;
+            await invoke('rename_cover', { category, rootPath, oldName: entry.coverFileName, newName: newCoverFileName });
+            updated.coverFileName = newCoverFileName;
+          }
+          await invoke('rename_note', { category, rootPath, oldName: entry.noteFileName, newName: newNoteFileName });
+        }
+        onUpdate(updated);
+      } catch (e) { console.error(e); }
+    }
+
     onClose();
   }
 
@@ -65,7 +95,7 @@ export default function DetailModal({ entry, category, rootPath, coverUrl, onClo
               if (!selected) return;
               try {
                 if (entry.coverFileName) await invoke('delete_cover', { category, rootPath, fileName: entry.coverFileName });
-                const safeName = title.replace(/[/\\?%*:|"<>]/g, '').replace(/\s+/g, '_').slice(0, 40);
+                const safeName = sanitizeFileName(title);
                 const newFileName = await invoke<string>('copy_cover', { sourcePath: selected as string, category, rootPath, targetName: safeName });
                 onUpdate({ ...entry, coverFileName: newFileName });
               } catch (e) { console.error(e); }
