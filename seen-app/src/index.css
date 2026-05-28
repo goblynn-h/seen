@@ -1,0 +1,191 @@
+@import "tailwindcss";
+@import "@uiw/react-md-editor/markdown-editor.css";
+
+@variant dark (&:where(.dark, .dark *));
+
+/* ===== Theme system ===== */
+@theme {
+  --color-app-bg: var(--theme-bg);
+  --color-app-surface: var(--theme-surface);
+  --color-app-surface-alt: var(--theme-surface-alt);
+  --color-app-border: var(--theme-border);
+  --color-app-text: var(--theme-text);
+  --color-app-text-secondary: var(--theme-text-secondary);
+  --color-app-text-muted: var(--theme-text-muted);
+  --color-app-active: var(--theme-active);
+  --color-app-active-text: var(--theme-active-text);
+  --color-app-hover: var(--theme-hover);
+  --color-app-input: var(--theme-input);
+  --color-app-accent: var(--theme-accent);
+  --color-md-text: var(--theme-md-text);
+  --color-md-heading: var(--theme-md-heading);
+  --color-md-code: var(--theme-md-code);
+  --color-md-link: var(--theme-md-link);
+  --color-md-toolbar: var(--theme-md-toolbar);
+}
+
+/* ===== 素白 - 黑白极简 ===== */
+:root, [data-theme="mono"] {
+  --theme-bg: #fff;
+  --theme-surface: #fafafa;
+  --theme-surface-alt: #f4f4f5;
+  --theme-border: #e4e4e7;
+  --theme-text: #27272a;
+  --theme-text-secondary: #52525b;
+  --theme-text-muted: #a1a1aa;
+  --theme-active: #27272a;
+  --theme-active-text: #fff;
+  --theme-hover: #f4f4f5;
+  --theme-input: #fff;
+  --theme-accent: #27272a;
+  --theme-md-text: #27272a;
+  --theme-md-heading: #18181b;
+  --theme-md-code: #52525b;
+  --theme-md-link: #2563eb;
+  --theme-md-toolbar: #71717a;
+}
+.dark, .dark[data-theme="mono"] {
+  --theme-bg: #18181b;
+  --theme-surface: #09090b;
+  --theme-surface-alt: #27272a;
+  --theme-border: #3f3f46;
+  --theme-text: #e4e4e7;
+  --theme-text-secondary: #a1a1aa;
+  --theme-text-muted: #71717a;
+  --theme-active: #e4e4e7;
+  --theme-active-text: #18181b;
+  --theme-hover: #27272a;
+  --theme-input: #27272a;
+  --theme-accent: #e4e4e7;
+  --theme-md-text: #f4f4f5;
+  --theme-md-heading: #fafafa;
+  --theme-md-code: #e4e4e7;
+  --theme-md-link: #93c5fd;
+  --theme-md-toolbar: #e4e4e7;
+}
+
+/* ===== 松绿 - 青翠松针 ===== */
+[data-theme="pine"] {
+  --theme-bg: #f0fdf4;
+  --theme-surface: #dcfce7;
+  --theme-surface-alt: #bbf7d0;
+  --theme-border: #86efac;
+  --theme-text: #14532d;
+  --theme-text-secondary: #166534;
+  --theme-text-muted: #4ade80;
+  --theme-active: #14532d;
+  --theme-active-text: #f0fdf4;
+  --theme-hover: #dcfce7;
+  --theme-input: #fff;
+  --theme-accent: #166534;
+  --theme-md-text: #14532d;
+  --theme-md-heading: #052e16;
+  --theme-md-code: #166534;
+  --theme-md-link: #2563eb;
+  --theme-md-toolbar: #15803d;
+}
+.dark[data-theme="pine"] {
+  --theme-bg: #022c22;
+  --theme-surface: #022c22;
+  --theme-surface-alt: #064e3b;
+  --theme-border: #065f46;
+  --theme-text: #d1fae5;
+  --theme-text-secondary: #6ee7b7;
+  --theme-text-muted: #34d399;
+  --theme-active: #6ee7b7;
+  --theme-active-text: #022c22;
+  --theme-hover: #064e3b;
+  --theme-input: #064e3b;
+  --theme-accent: #34d399;
+  --theme-md-text: #ecfdf5;
+  --theme-md-heading: #f0fdf4;
+  --theme-md-code: #a7f3d0;
+  --theme-md-link: #93c5fd;
+  --theme-md-toolbar: #a7f3d0;
+}
+
+/* ===== 暖黄 - 晨光暖照 ===== */
+[data-theme="warm"] {
+  --theme-bg: #fffbeb;
+  --theme-surface: #fef3c7;
+  --theme-surface-alt: #fde68a;
+  --theme-border: #d6d3d1;
+  --theme-text: #44403c;
+  --theme-text-secondary: #78716c;
+  --theme-text-muted: #a8a29e;
+  --theme-active: #44403c;
+  --theme-active-text: #fffbeb;
+  --theme-hover: #fef3c7;
+  --theme-input: #fff;
+  --theme-accent: #b45309;
+  --theme-md-text: #44403c;
+  --theme-md-heading: #1c1917;
+  --theme-md-code: #78716c;
+  --theme-md-link: #ea580c;
+  --theme-md-toolbar: #78716c;
+}
+.dark[data-theme="warm"] {
+  --theme-bg: #1c1917;
+  --theme-surface: #0c0a09;
+  --theme-surface-alt: #292524;
+  --theme-border: #44403c;
+  --theme-text: #e7e5e4;
+  --theme-text-secondary: #a8a29e;
+  --theme-text-muted: #78716c;
+  --theme-active: #d6d3d1;
+  --theme-active-text: #1c1917;
+  --theme-hover: #292524;
+  --theme-input: #292524;
+  --theme-accent: #fbbf24;
+  --theme-md-text: #f5f5f4;
+  --theme-md-heading: #fafaf9;
+  --theme-md-code: #d6d3d1;
+  --theme-md-link: #fbbf24;
+  --theme-md-toolbar: #d6d3d1;
+}
+
+/* ===== Base ===== */
+body { margin: 0; padding: 0; overflow: hidden; }
+#root { height: 100vh; width: 100vw; }
+
+/* ===== MD Editor ===== */
+.w-md-editor { border: none !important; box-shadow: none !important; background: transparent !important; }
+.w-md-editor-toolbar { border: none !important; background: transparent !important; }
+.w-md-editor-preview { box-shadow: none !important; background: transparent !important; }
+.w-md-editor-text { background: transparent !important; }
+.w-md-editor-text-input { background: transparent !important; }
+
+.wmde-markdown { background: transparent !important; }
+.wmde-markdown * { background-color: transparent !important; }
+.wmde-markdown { color: var(--theme-md-text) !important; }
+.wmde-markdown p, .wmde-markdown li, .wmde-markdown span, .wmde-markdown td, .wmde-markdown th { color: var(--theme-md-text) !important; }
+.wmde-markdown h1, .wmde-markdown h2, .wmde-markdown h3, .wmde-markdown h4, .wmde-markdown h5, .wmde-markdown h6 { color: var(--theme-md-heading) !important; }
+.wmde-markdown code { color: var(--theme-md-code) !important; }
+.wmde-markdown a { color: var(--theme-md-link) !important; }
+.w-md-editor-toolbar svg, .w-md-editor-toolbar button { color: var(--theme-md-toolbar) !important; }
+.w-md-editor-toolbar button:hover { background-color: var(--theme-hover) !important; }
+.w-md-editor textarea,
+.w-md-editor-text-input { color: var(--theme-md-text) !important; caret-color: var(--theme-md-text) !important; }
+
+.w-md-editor-text,
+.w-md-editor-text pre,
+.w-md-editor-text code { color: var(--theme-md-text) !important; }
+
+/* Override MDEditor's internal dark mode variables */
+[data-color-mode="dark"] .w-md-editor-text-input,
+[data-color-mode="dark"] .wmde-markdown,
+[data-color-mode="dark"] .w-md-editor-text {
+  --color-fg-default: var(--theme-md-text);
+  --color-fg-muted: var(--theme-text-secondary);
+  color: var(--theme-md-text) !important;
+}
+
+.wmde-markdown img { max-width: 100%; }
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9ca3af; }
+.dark ::-webkit-scrollbar-thumb { background: #52525b; }
+.dark ::-webkit-scrollbar-thumb:hover { background: #71717a; }

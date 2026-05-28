@@ -22,9 +22,3 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
-
-# Runtime config (exe同级目录)
-config.json
-
-# Claude local settings
-.claude/
